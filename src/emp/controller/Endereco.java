@@ -17,6 +17,9 @@ public class Endereco {
     private String cidade;
     private String estado;
     private String cep;
+    
+    private int pk_endereco;
+    private int fk_cliente;
 
     public Endereco() {
     }
@@ -99,5 +102,19 @@ public class Endereco {
     public void setPk_endereco(int aInt) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    public int getPk_endereco() {
+        return pk_endereco;
+    }
+
+    public int getFk_cliente() {
+        return fk_cliente;
+    }
+
+    public void setFk_cliente(int fk_cliente) {
+        this.fk_cliente = fk_cliente;
+    }
+    
+    
         
 }

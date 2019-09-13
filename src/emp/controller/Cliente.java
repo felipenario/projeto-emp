@@ -8,6 +8,7 @@ import java.util.ArrayList;
  * @author L
  */
 public class Cliente {
+    private int pk_cliente;
     private String nome;
     private Date nascimento;
     private Endereco endereco;
@@ -35,6 +36,20 @@ public class Cliente {
         this.telefones = telefones;
         this.cpf = new Cpf(numero);
     }
+
+    public Cliente(int pk_cliente, String nome, Date nascimento, Cpf cpf) {
+        this.pk_cliente = pk_cliente;
+        this.nome = nome;
+        this.nascimento = nascimento;
+        this.cpf = cpf;
+    }
+
+    public Cliente(int pk_cliente, String string, Date date, String string0) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+ 
+    
+    
 
     public String getNome() {
         return nome;
@@ -75,6 +90,8 @@ public class Cliente {
     public void setCpf(String numero) {
         this.cpf = new Cpf(numero);
     }
+    
+     
 
     @Override
     public String toString() {

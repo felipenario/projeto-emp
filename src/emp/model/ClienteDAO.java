@@ -6,6 +6,7 @@
 package emp.model;
 
 import emp.controller.Cliente;
+import emp.controller.Endereco;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -22,12 +23,13 @@ public class ClienteDAO {
         
         PreparedStatement stm = 
                 conn.prepareStatement(
-                "INSERT INTO cliente(nascimento, endereco, telefones) VALUES (?, ?, ?)",
+                "INSERT INTO cliente(nome, nascimento, cpf) VALUES (?, ?, ?)",
                  PreparedStatement.RETURN_GENERATED_KEYS);
+              
+        stm.setString(1, c.getNome());
+        stm.setDate(2, c.getNascimento());
+        stm.setString(3, c.getCpf());
         
-        stm.setString(1, c.getNascimento().toString());
-        stm.setString(2, c.getEndereco().toString());
-        stm.setString(3, c.getTelefones().toString());
         
         stm.execute();
         
@@ -36,7 +38,11 @@ public class ClienteDAO {
         
         //configura a chave primaria gerada no objeto telefone
         c.setPk_cliente(pkset.getInt(1));
-       
+        //configurou a chave estrangeira
+        c.getEndereco().setFk_cliente(pkset.getInt(1));
+        
+        EnderecoDAO.create(c.getEndereco());
+    
         return pkset.getInt(1);
     }
     
@@ -45,7 +51,7 @@ public class ClienteDAO {
         
         PreparedStatement stm = 
                 conn.prepareStatement(
-                "SELECT * FROM CLIENTE WHERE PK_CLIENTE=?"
+                "SELECT * FROM CLIENTE WHERE PK_CLIENTE =" + pk_cliente
                 );
         
         stm.setInt(1, pk_cliente);
@@ -54,11 +60,15 @@ public class ClienteDAO {
                      
         ResultSet rs = stm.getResultSet();
         
+        Endereco e = EnderecoDAO.retreave(pk_cliente);
+        
         if (rs.next()){
-            return new Cliente(                   
-              rs.getString("nascimento"),
-              rs.getString("endereco"),
-              rs.getString("telefones")
+            return new Cliente(
+                    pk_cliente, rs.getString("nome"), rs.getDate("nascimento"), rs.getString("cpf")
+//              pk_cliente,
+//              rs.getString("nome"),
+//              rs.getDate("nascimento"),
+//              rs.getString("cpf")
             );            
         } else{
             throw new RuntimeException("Cliente não existe");                  

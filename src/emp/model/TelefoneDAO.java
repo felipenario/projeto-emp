@@ -97,6 +97,33 @@ public class TelefoneDAO {
        return telefones;
     }
     
+    public static void delete(Telefone t) throws SQLException{
+        
+         Connection conn = DBConnection.getConnection();
+         if(t.getPk_telefone() != 0){
+             conn.createStatement().execute("DELETE FROM TELEFONE WHERE PK_TELEFONE =" + t.getPk_telefone());
+             
+             
+         }else throw new RuntimeException("Telefone não existe");
+        
+        
+    }
+    
+    public static void update (Telefone t) throws SQLException{
+        
+        Connection conn = DBConnection.getConnection();
+        
+        PreparedStatement stm = 
+                conn.prepareStatement(
+                "UPDATE telefone SET DDD = ? WHERE PK_TELEFONE = ?");
+        
+        stm.setInt(1, t.getDdd());
+        stm.setString(2, t.getNumero());
+        stm.setInt(3, t.getPk_telefone());
+        
+        stm.execute();
+    }
+    
     
     
     
