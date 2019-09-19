@@ -7,6 +7,7 @@ package emp.model;
 
 import emp.controller.Cliente;
 import emp.controller.Endereco;
+import emp.controller.Telefone;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -36,10 +37,18 @@ public class ClienteDAO {
         ResultSet pkset = stm.getGeneratedKeys();
         pkset.next();
         
+        int pk = pkset.getInt(1);
         //configura a chave primaria gerada no objeto telefone
-        c.setPk_cliente(pkset.getInt(1));
+        /*c.setPk_cliente(pkset.getInt(1));*/
         //configurou a chave estrangeira
-        c.getEndereco().setFk_cliente(pkset.getInt(1));
+        
+        for(Telefone t:c.getTelefones()){
+            
+            t.setFk(pk);
+            TelefoneDAO.create(t);
+            
+        }
+        //c.getEndereco().setFk_cliente(pkset.getInt(1));
         
         EnderecoDAO.create(c.getEndereco());
     
