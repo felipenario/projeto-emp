@@ -10,7 +10,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 /**
  *
@@ -23,18 +22,17 @@ public class EnderecoDAO {
         
         PreparedStatement stm = 
                 conn.prepareStatement(
-                "INSERT INTO endereco(logradouro, numero, complemento, bairro, cidade, estado, cep, fk_cliente) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                "INSERT INTO endereco(fk_cliente, logradouro, numero, complemento, bairro, cidade, estado, cep) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
                  PreparedStatement.RETURN_GENERATED_KEYS);
         
-        
-        stm.setString(1, e.getLogradouro());
-        stm.setString(2, e.getNumero());
-        stm.setString(3, e.getComplemento());
-        stm.setString(4, e.getBairro());
-        stm.setString(5, e.getCidade());
-        stm.setString(6, e.getEstado());
-        stm.setString(7, e.getCep());
-        stm.setInt(8, e.getFk_cliente());
+        stm.setInt(1, e.getFk_cliente());
+        stm.setString(2, e.getLogradouro());
+        stm.setString(3, e.getNumero());
+        stm.setString(4, e.getComplemento());
+        stm.setString(5, e.getBairro());
+        stm.setString(6, e.getCidade());
+        stm.setString(7, e.getEstado());
+        stm.setString(8, e.getCep());
         
         stm.execute();
         
@@ -70,56 +68,65 @@ public class EnderecoDAO {
               rs.getString("bairro"),
               rs.getString("cidade"),
               rs.getString("estado"),
-              rs.getString("cep")      
+              rs.getString("cep"),
+              rs.getInt("pk_endereco"),
+              rs.getInt("fk_cliente")
             );            
         } else{
             throw new RuntimeException("Endereço não existe");                  
         }
     }
     
-    /*public static ArrayList<Telefone> retreaveall(int fk_cliente) throws SQLException{
+    public static Endereco retreaveall(int fk_cliente) throws SQLException{
         Connection conn = DBConnection.getConnection();
         
-        ResultSet rs = conn.createStatement().
-                executeQuery("SELECT * FROM TELEFONE WHERE FK_CLIENTE ="+fk_cliente);
-        
-        ArrayList<Telefone> telefones = new ArrayList<>();
-        
-        while(rs.next()){
-            telefones.add(new Telefone(rs.getInt("ddd"), 
-                    rs.getString("numero"), 
-                    rs.getInt("pk_telefone"), 
-                    fk_cliente));
+       ResultSet rs = conn.createStatement().executeQuery("SELECT * FROM TELEFONE WHERE FK_CLIENTE=" + fk_cliente);
+        Endereco e = null;
+        if (rs.next()) {
+            e = new Endereco(
+                    rs.getString("logradouro"),
+                    rs.getString("numero"),
+                    rs.getString("complemento"),
+                    rs.getString("bairro"),
+                    rs.getString("cidade"),
+                    rs.getString("estado"),
+                    rs.getString("cep"),
+                    rs.getInt("pk_endereco"),
+                    rs.getInt("fk_cliente")
+            );
+        }
+        return e;
+    }
+    
+     public static void delete(Endereco e) throws SQLException {
+        Connection conn = DBConnection.getConnection();
+
+        if (e.getPk_endereco() != 0) {
+            conn.createStatement().
+                    execute("DELETE FROM endereco WHERE PK_ENDERECO=" + e.getPk_endereco());
+        } else {
+            throw new RuntimeException("Endereco nao existe no BD");
         }
 
-       return telefones;
     }
     
-    public static void delete(Telefone t) throws SQLException{
-        
-         Connection conn = DBConnection.getConnection();
-         if(t.getPk_telefone() != 0){
-             conn.createStatement().execute("DELETE FROM TELEFONE WHERE PK_TELEFONE =" + t.getPk_telefone());
-             
-             
-         }else throw new RuntimeException("Telefone não existe");
-        
-        
-    }
-    
-    public static void update (Telefone t) throws SQLException{
-        
+     public static void update(Endereco e) throws SQLException {
         Connection conn = DBConnection.getConnection();
-        
-        PreparedStatement stm = 
-                conn.prepareStatement(
-                "UPDATE telefone SET DDD = ? WHERE PK_TELEFONE = ?");
-        
-        stm.setInt(1, t.getDdd());
-        stm.setString(2, t.getNumero());
-        stm.setInt(3, t.getPk_telefone());
-        
+
+        PreparedStatement stm = conn.prepareStatement(
+                "UPDATE ENDERECO SET LOGRADOURO=?, NUMERO=?, COMPLEMENTO=?, BAIRRO=?, CIDADE=?, ESTADO=?, CEP=?,PK_ENDERECO=? WHERE PK_TELEFONE=?");
+
+  //configura as interrogações pela ordem
+        stm.setString(1, e.getLogradouro());
+        stm.setString(2, e.getNumero());
+        stm.setString(3, e.getComplemento());
+        stm.setString(4, e.getBairro());
+        stm.setString(5, e.getCidade());
+        stm.setString(6, e.getEstado());
+        stm.setString(7, e.getCep());
+        stm.setInt(8, e.getPk_endereco());
+
         stm.execute();
     }
-    */
+   
 }

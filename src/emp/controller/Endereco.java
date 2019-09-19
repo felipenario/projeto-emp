@@ -34,6 +34,31 @@ public class Endereco {
         this.cep = cep;
     }
 
+    public Endereco(String logradouro, String numero, String complemento, String bairro, String cidade, String estado, String cep, int pk_endereco) {
+        this.logradouro = logradouro;
+        this.numero = numero;
+        this.complemento = complemento;
+        this.bairro = bairro;
+        this.cidade = cidade;
+        this.estado = estado;
+        this.cep = cep;
+        this.pk_endereco = pk_endereco;
+    }
+
+    public Endereco(String logradouro, String numero, String complemento, String bairro, String cidade, String estado, String cep, int pk_endereco, int fk_cliente) {
+        this.logradouro = logradouro;
+        this.numero = numero;
+        this.complemento = complemento;
+        this.bairro = bairro;
+        this.cidade = cidade;
+        this.estado = estado;
+        this.cep = cep;
+        this.pk_endereco = pk_endereco;
+        this.fk_cliente = fk_cliente;
+    }
+    
+    
+
     public String getLogradouro() {
         return logradouro;
     }
@@ -99,8 +124,8 @@ public class Endereco {
         System.out.println(this);
     }
 
-    public void setPk_endereco(int aInt) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void setPk_endereco(int pk_endereco) {
+        this.pk_endereco = pk_endereco;
     }
 
     public int getPk_endereco() {

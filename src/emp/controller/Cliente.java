@@ -37,17 +37,14 @@ public class Cliente {
         this.cpf = new Cpf(numero);
     }
 
-    public Cliente(int pk_cliente, String nome, Date nascimento, Cpf cpf) {
+    public Cliente(int pk_cliente, String nome, Date nascimento, String cpf) {
         this.pk_cliente = pk_cliente;
         this.nome = nome;
         this.nascimento = nascimento;
-        this.cpf = cpf;
+        this.cpf = new Cpf(cpf);
     }
 
-    public Cliente(int pk_cliente, String string, Date date, String string0) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
- 
+  
     
     
 
@@ -109,11 +106,18 @@ public class Cliente {
         }
     }
 
-    public void setPk_cliente(int aInt) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public int setPk_cliente() {
+        return pk_cliente;
+        
     }
     
     
+    public void setPk_cliente(int pk_cliente) {
+        this.pk_cliente = pk_cliente;
+    }
     
+    public int getPk_cliente() {
+        return pk_cliente;
+    }
 
 }

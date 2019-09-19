@@ -75,4 +75,47 @@ public class ClienteDAO {
         }
     }
     
+    public static ArrayList<Cliente> retreaveall(int pk_cliente) throws SQLException{
+        Connection conn = DBConnection.getConnection();
+        
+        ResultSet rs = conn.createStatement().
+                executeQuery("SELECT * FROM CLIENTE WHERE PK_CLIENTE ="+pk_cliente);
+        
+        ArrayList<Cliente> clientes = new ArrayList<>();
+        
+        while(rs.next()){
+            clientes.add(new Cliente(pk_cliente, rs.getString("nome"), rs.getDate("nascimento"), rs.getString("cpf")) );
+        }
+
+       return clientes;
+    }
+    
+    public static void delete(Cliente c) throws SQLException{
+        
+         Connection conn = DBConnection.getConnection();
+         if(c.getPk_cliente() != 0){
+             conn.createStatement().execute("DELETE FROM CLIENTE WHERE PK_CLIENTE =" + c.getPk_cliente());
+             
+             
+         }else throw new RuntimeException("Cliente não existe");
+        
+        
+    }
+    
+        public static void update (Cliente c) throws SQLException{
+        
+        Connection conn = DBConnection.getConnection();
+        
+        PreparedStatement stm = 
+                conn.prepareStatement(
+                "UPDATE CLIENTE SET NOME = ? WHERE PK_CLIENTE = ?");
+        
+        stm.setString(1, c.getNome());
+        stm.setDate(2, c.getNascimento());
+        stm.setString(3, c.getCpf());
+        stm.setInt(4, c.getPk_cliente());
+        
+        stm.execute();
+    }
+    
 }
