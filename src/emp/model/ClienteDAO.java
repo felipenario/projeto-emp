@@ -69,19 +69,27 @@ public class ClienteDAO {
                      
         ResultSet rs = stm.getResultSet();
         
-        Endereco e = EnderecoDAO.retreave(pk_cliente);
+        
+        Cliente c;
         
         if (rs.next()){
-            return new Cliente(
-                    pk_cliente, rs.getString("nome"), rs.getDate("nascimento"), rs.getString("cpf")
+            c = new Cliente(
+                    rs.getInt("pk_cliente"), 
+                    rs.getString("nome"), 
+                    rs.getDate("nascimento"), 
+                    rs.getString("cpf"));
+            
+            c.setTelefones(TelefoneDAO.retreaveall(c.getPk_cliente()));
+            return c;
 //              pk_cliente,
 //              rs.getString("nome"),
 //              rs.getDate("nascimento"),
 //              rs.getString("cpf")
-            );            
+                        
         } else{
             throw new RuntimeException("Cliente não existe");                  
         }
+      
     }
     
     public static ArrayList<Cliente> retreaveall(int pk_cliente) throws SQLException{
@@ -106,7 +114,9 @@ public class ClienteDAO {
              conn.createStatement().execute("DELETE FROM CLIENTE WHERE PK_CLIENTE =" + c.getPk_cliente());
              
              
-         }else throw new RuntimeException("Cliente não existe");
+         }else {
+            throw new RuntimeException("Cliente não existe");
+         }
         
         
     }
@@ -117,7 +127,7 @@ public class ClienteDAO {
         
         PreparedStatement stm = 
                 conn.prepareStatement(
-                "UPDATE CLIENTE SET NOME = ? WHERE PK_CLIENTE = ?");
+                "UPDATE CLIENTE SET NOME = ?, NASCIMENTO = ?, CPF = ? WHERE PK_CLIENTE = ?");
         
         stm.setString(1, c.getNome());
         stm.setDate(2, c.getNascimento());
@@ -125,6 +135,10 @@ public class ClienteDAO {
         stm.setInt(4, c.getPk_cliente());
         
         stm.execute();
+        
+        for(Telefone t: c.getTelefones()){
+            TelefoneDAO.update(t);
+        }
     }
     
 }
